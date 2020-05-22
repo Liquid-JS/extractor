@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "declaration": true,
+        "inlineSources": true
+    },
+    "include": [
+        "src",
+        "typings"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

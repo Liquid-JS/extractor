@@ -1,7 +1,9 @@
 {
     "name": "@liquid-js/extractor",
     "version": "0.0.1",
-    "main": "dist/index.js",
+    "main": "dist/bundle.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
     "repository": "https://github.com/Liquid-JS/extractor.git",
     "author": "HitkoDev <development@hitko.si>",
     "license": "MIT",
@@ -15,6 +17,9 @@
         "build": "tsc -p tsconfig.production.json && rollup -c rollup.config.js",
         "lint": "tslint --fix --project ."
     },
+    "files": [
+        "dist"
+    ],
     "devDependencies": {
         "@ampproject/rollup-plugin-closure-compiler": "^0.25.2",
         "@commitlint/cli": "^8.3.5",

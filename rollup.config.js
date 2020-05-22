@@ -9,7 +9,7 @@ export default [
         input: 'dist/index.js',
         output: [
             {
-                format: 'iife',
+                format: 'umd',
                 file: 'dist/bundle.js',
                 name: 'serializeWithStyles'
             }
@@ -27,8 +27,16 @@ export default [
                 async renderChunk(code, chunk, options) {
                     const ms = new MagicString(code)
 
-                    const pos = code.indexOf('var serializeWithStyles')
-                    ms.overwrite(pos, pos + 23, 'window.serializeWithStyles')
+                    const l = code.trim()
+                    const pos = l.match(/[a-zA-Z]+\.([a-zA-Z]+(=[a-zA-Z]+\(\)\)))$/)
+
+                    const i = code.indexOf(pos[0])
+
+                    ms.overwrite(
+                        i,
+                        i + pos[0].length - pos[2].length,
+                        pos[0].substr(0, pos[0].length - pos[1].length) + 'serializeWithStyles'
+                    )
 
                     return {
                         code: ms.toString(),

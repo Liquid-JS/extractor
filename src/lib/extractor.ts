@@ -54,6 +54,6 @@ export function serializeWithStyles(element: HTMLElement, options: {
     })
 
     return styles.length
-        ? `<style>${styles}</style>${tpl.innerHTML}`
+        ? `<style>${styles.join('')}</style>${tpl.innerHTML}`
         : tpl.innerHTML
 }

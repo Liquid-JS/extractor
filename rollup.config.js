@@ -4,6 +4,8 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import MagicString from 'magic-string'
 import { terser } from 'rollup-plugin-terser'
 
+const MODULE_NAME = 'serializeWithStyles'
+
 export default [
     {
         input: 'dist/index.js',
@@ -11,7 +13,7 @@ export default [
             {
                 format: 'umd',
                 file: 'dist/bundle.js',
-                name: 'serializeWithStyles'
+                name: MODULE_NAME
             }
         ],
         plugins: [
@@ -35,7 +37,7 @@ export default [
                     ms.overwrite(
                         i,
                         i + pos[0].length - pos[2].length,
-                        pos[0].substr(0, pos[0].length - pos[1].length) + 'serializeWithStyles'
+                        pos[0].substr(0, pos[0].length - pos[1].length) + MODULE_NAME
                     )
 
                     return {

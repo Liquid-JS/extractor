@@ -1,6 +1,6 @@
 {
     "name": "@liquid-js/extractor",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "dist/bundle.js",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -15,7 +15,8 @@
     },
     "scripts": {
         "build": "tsc -p tsconfig.production.json && rollup -c rollup.config.js",
-        "lint": "tslint --fix --project ."
+        "lint": "tslint --fix --project .",
+        "prepublish": "rimraf \"dist/*\" && yarn run build"
     },
     "files": [
         "dist"
@@ -29,11 +30,12 @@
         "@testdeck/mocha": "^0.1.0",
         "husky": "^4.2.5",
         "magic-string": "^0.25.7",
+        "rimraf": "^3.0.2",
         "rollup": "^2.10.7",
         "rollup-plugin-terser": "^5.3.0",
         "ts-node": "^8.10.1",
         "tslint": "^6.1.2",
-        "typescript": "^3.9.2"
+        "typescript": "^3.9.3"
     },
     "dependencies": {
         "tslib": "^2.0.0"

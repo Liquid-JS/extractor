@@ -13,21 +13,23 @@ frame.setAttribute('style', Object.entries({
 )
 document.body.appendChild(frame)
 
+const win = frame.contentWindow
+const doc = frame.contentDocument || win?.document
 const defaultStylesMap = new Map<string, ReturnType<typeof stylesToObj>>()
 
 export function computeDefaultStyles(tagname: string, pseudo?: string) {
-    const element = frame.contentWindow?.document?.createElement(tagname)
+    const element = doc?.createElement(tagname)
     if (!element)
         return undefined
 
-    frame.contentWindow?.document?.body.appendChild(element)
+    doc?.body.appendChild(element)
 
     const styles = stylesToObj(pseudo
-        ? frame.contentWindow?.getComputedStyle(element, pseudo)
-        : frame.contentWindow?.getComputedStyle(element)
+        ? win?.getComputedStyle(element, pseudo)
+        : win?.getComputedStyle(element)
     )
 
-    frame.contentWindow?.document?.body.removeChild(element)
+    doc?.body.removeChild(element)
 
     return styles
 }

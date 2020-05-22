@@ -11,7 +11,7 @@ export function serializeWithStyles(element: HTMLElement, options: {
     } = options
 
     if (element.nodeType !== Node.ELEMENT_NODE)
-        throw new TypeError()
+        throw new TypeError(`Expected ${Node.ELEMENT_NODE}, received ${element.nodeType}`)
 
     const tpl = document.createElement('template')
     tpl.innerHTML = element.outerHTML

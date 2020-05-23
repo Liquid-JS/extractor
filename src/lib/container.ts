@@ -1,5 +1,8 @@
 import { stylesToObj } from './utils'
 
+/**
+ * An isolated container, used to determine browser's default styles
+ */
 const frame = document.createElement('iframe')
 frame.setAttribute('style', Object.entries({
     width: '0 !important',
@@ -17,6 +20,12 @@ const win = frame.contentWindow
 const doc = frame.contentDocument || win?.document
 const defaultStylesMap = new Map<string, ReturnType<typeof stylesToObj>>()
 
+/**
+ * Compute default styles for given tagname / pseudo element
+ *
+ * @param tagname
+ * @param pseudo Optional pseudo element name
+ */
 export function computeDefaultStyles(tagname: string, pseudo?: string) {
     const element = doc?.createElement(tagname)
     if (!element)
@@ -34,6 +43,12 @@ export function computeDefaultStyles(tagname: string, pseudo?: string) {
     return styles
 }
 
+/**
+ * Get (cached) default styles for given tagname / pseudo element
+ *
+ * @param tagname
+ * @param pseudo Optional pseudo element name
+ */
 export function getDefaultStyles(tagname: string, pseudo?: string) {
     const key = (pseudo
         ? `${tagname}${pseudo}`

@@ -1,12 +1,31 @@
 import { getDefaultStyles } from './container'
-import { StylesObject, stylesToObj, uuidv4 } from './utils'
+import { applyStyles, stylesToObj, uuidv4 } from './utils'
 
-export function serializeWithStyles(element: HTMLElement, options: {
-    noStyleTags?: Set<string>
+export interface SerializeOptions {
+    /**
+     * Tag names which will be ignored by style extractor
+     *
+     * @defaultValue Set {'BASE', 'HEAD', 'HTML', 'META', 'NOFRAME', 'NOSCRIPT', 'PARAM', 'SCRIPT', 'STYLE', 'TITLE'}
+     */
+    ignoredElements?: Set<string>
+
+    /**
+     * Tag names which will be ignored by style extractor
+     *
+     * @defaultValue Set {'::before', '::after', '::placeholder', '::marker'}
+     */
     pseudoElements?: Set<string>
-} = {}) {
+}
+
+/**
+ * Serialize element to string while inlining styles, and extracting styles for given pseudo elements
+ *
+ * @param element Target element to be serialized
+ * @param options Serialization options
+ */
+export function serializeWithStyles(element: HTMLElement, options: SerializeOptions = {}) {
     const {
-        noStyleTags = new Set(['BASE', 'HEAD', 'HTML', 'META', 'NOFRAME', 'NOSCRIPT', 'PARAM', 'SCRIPT', 'STYLE', 'TITLE']),
+        ignoredElements = new Set(['BASE', 'HEAD', 'HTML', 'META', 'NOFRAME', 'NOSCRIPT', 'PARAM', 'SCRIPT', 'STYLE', 'TITLE']),
         pseudoElements = new Set(['::before', '::after', '::placeholder', '::marker'])
     } = options
 
@@ -25,30 +44,25 @@ export function serializeWithStyles(element: HTMLElement, options: {
         const target = tplElements[i]
         const tagname = el.tagName.toUpperCase()
 
-        if (noStyleTags.has(tagname))
+        if (ignoredElements.has(tagname))
             return
 
         const elementStyles = stylesToObj(window.getComputedStyle(el))
-        const defaultStyles = getDefaultStyles(tagname);
+        const defaultStyles = getDefaultStyles(tagname)
 
-        (Object.keys(elementStyles || {}) as Array<keyof StylesObject>)
-            .filter(k => elementStyles?.[k] && elementStyles?.[k] !== defaultStyles?.[k])
-            .forEach(k => target.style[k] = elementStyles![k])
+        applyStyles(target, elementStyles, defaultStyles)
 
         const pseudoClass = `c-${uuidv4()}`
         pseudoElements.forEach((pseudo) => {
-            const ph = document.createElement('div').style
-            ph.cssText = ''
+            const ph = document.createElement('div')
             const pseudoStyles = stylesToObj(window.getComputedStyle(el, pseudo))
-            const defaultPseudoStyles = getDefaultStyles(tagname, pseudo);
+            const defaultPseudoStyles = getDefaultStyles(tagname, pseudo)
 
-            (Object.keys(pseudoStyles || {}) as Array<keyof StylesObject>)
-                .filter(k => pseudoStyles?.[k] && pseudoStyles?.[k] !== defaultPseudoStyles?.[k])
-                .forEach(k => ph[k] = pseudoStyles![k])
+            applyStyles(ph, pseudoStyles, defaultPseudoStyles)
 
-            if (ph.cssText) {
+            if (ph.style.cssText) {
                 target.classList.add(pseudoClass)
-                styles.push(`.${pseudoClass}${pseudo}{${ph.cssText}}`)
+                styles.push(`.${pseudoClass}${pseudo}{${ph.style.cssText}}`)
             }
         })
     })

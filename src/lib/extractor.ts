@@ -41,7 +41,7 @@ export function serializeWithStyles(element: HTMLElement, options: SerializeOpti
     const styles = new Array<string>()
 
     elements.forEach((el, i) => {
-        const target = tplElements[i]
+        const target = tplElements[i] as HTMLElement | undefined
         const tagname = el.tagName.toUpperCase()
 
         if (ignoredElements.has(tagname))
@@ -50,7 +50,8 @@ export function serializeWithStyles(element: HTMLElement, options: SerializeOpti
         const elementStyles = stylesToObj(window.getComputedStyle(el))
         const defaultStyles = getDefaultStyles(tagname)
 
-        applyStyles(target, elementStyles, defaultStyles)
+        if (target)
+            applyStyles(target, elementStyles, defaultStyles)
 
         const pseudoClass = `c-${uuidv4()}`
         pseudoElements.forEach((pseudo) => {
@@ -61,7 +62,7 @@ export function serializeWithStyles(element: HTMLElement, options: SerializeOpti
             applyStyles(ph, pseudoStyles, defaultPseudoStyles)
 
             if (ph.style.cssText) {
-                target.classList.add(pseudoClass)
+                target?.classList.add(pseudoClass)
                 styles.push(`.${pseudoClass}${pseudo}{${ph.style.cssText}}`)
             }
         })

@@ -1,6 +1,6 @@
 {
     "name": "@liquid-js/extractor",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A tiny (~4KB) tool to extract DOM tree with styles and pseudo elements",
     "type": "module",
     "main": "./lib/index.js",
